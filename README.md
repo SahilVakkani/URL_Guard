@@ -25,7 +25,7 @@ triage alerts in a real SOC, applied to everyday browsing.
   before.
 - **Smart caching + de-duplication**: results are cached for 1 hour per URL,
   concurrent checks for the same URL are merged into a single request, and a
-  background alarm sweeps expired cache entries every 6 hours — so it stays
+  background alarm sweeps expired cache entries every 6 hours  so it stays
   fast and stays well within free-tier API limits.
 
 ## Why multiple sources?
@@ -36,7 +36,7 @@ Browsing is fast and authoritative for browser-level blocklisting. URLhaus is
 narrow but excellent specifically for active malware-distribution URLs. OTX
 surfaces community/researcher threat-intel pulses that commercial engines
 haven't caught up to yet. Combining them is the same "don't trust one feed"
-principle used in real SOC alert enrichment — this project treats a
+principle used in real SOC alert enrichment  this project treats a
 browser tab the way a SOC analyst treats an incoming IOC.
 
 ## Setup
