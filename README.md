@@ -1,12 +1,12 @@
 # URL Reputation Guard
 
 A Chrome extension (Manifest V3) that checks every site you visit against
-**four** threat intelligence sources — VirusTotal, Google Safe Browsing,
-URLhaus (abuse.ch), and AlienVault OTX — and warns you before you interact
+**four** threat intelligence sources  VirusTotal, Google Safe Browsing,
+URLhaus (abuse.ch), and AlienVault OTX and warns you before you interact
 with a phishing or malware-hosting page.
 
 Built as a hands-on threat-intel enrichment project by a SOC/threat
-intelligence analyst — the same multi-source correlation approach used to
+intelligence analyst the same multi-source correlation approach used to
 triage alerts in a real SOC, applied to everyday browsing.
 
 ## What it does
@@ -19,7 +19,7 @@ triage alerts in a real SOC, applied to everyday browsing.
   each one said, vendor counts, threat-pulse counts, and links to the full
   report on each service.
 - **In-page warning banner** appears automatically on malicious/suspicious
-  pages, naming which sources flagged it — dismissible, non-intrusive on
+  pages, naming which sources flagged it dismissible, non-intrusive on
   clean sites (no banner at all).
 - **On-demand VirusTotal scanning** for URLs none of the sources have seen
   before.
@@ -69,74 +69,6 @@ popup.html/.js/.css — toolbar popup: overall verdict + per-source breakdown
 options.html/.js  — API key management (chrome.storage.local only)
 icons/            — extension icons
 ```
-
-No build step, no bundler, no backend — it's plain HTML/CSS/JS calling each
-vendor's API directly from the browser.
-
-## Privacy
-
-Be aware of what this extension inherently does, since that's the honest
-tradeoff of a reputation-checking tool:
-
-- **Every URL you visit is sent** to whichever sources you've configured
-  (VirusTotal / Google / abuse.ch / AlienVault) so they can look it up. This
-  is unavoidable — that's how URL reputation checking works.
-- **API keys** are stored only in `chrome.storage.local` on your machine —
-  never synced across devices, never sent anywhere except directly to the
-  service they belong to.
-- **No telemetry, no analytics, no third-party server.** This project has no
-  backend of its own; nothing is logged or collected beyond what each
-  third-party API already does on their end for its own service.
-- If you don't want a particular service seeing your browsing, simply don't
-  add a key for it — each source is fully optional and independent.
-
-See [SECURITY.md](./SECURITY.md) for the technical security design (host
-permission scoping, XSS-safe rendering, fetch timeouts).
-
-## Limitations
-
-- This is a **warning layer, not a blocker** — it flags risk but doesn't
-  prevent navigation. See "Ideas for extending this" below for how to turn
-  it into an active blocker.
-- Rate limits are real, especially VirusTotal's free tier (4/min). The
-  1-hour cache and request de-duplication keep normal browsing well within
-  limits, but rapid navigation across many brand-new domains can still hit
-  a ceiling — the badge shows a rate-limit error when that happens rather
-  than failing silently.
-- Reputation lookups reflect what's already been reported to these
-  services — a URL that's malicious but brand new may show as "clean" or
-  "unscanned" everywhere until someone else reports it first.
-
-## Ideas for extending this
-
-Good next steps if you want to keep building on this (and good talking
-points if you're using this as a portfolio project):
-
-- **Active blocking**: use `declarativeNetRequest` to redirect away from
-  confirmed-malicious URLs before the page loads, instead of just warning
-  after the fact.
-- **Context-menu link check**: right-click any link to check its reputation
-  before clicking it, without navigating there first.
-- **Typosquatting/homograph detection**: flag domains that are a short edit
-  distance from popular domains, or that mix Unicode look-alike characters —
-  catches phishing domains no reputation feed has indexed yet.
-- **IP/ASN reputation**: resolve the domain and check the hosting IP against
-  AbuseIPDB — useful for freshly-registered domains on known-bad
-  infrastructure.
-- **Domain age / WHOIS heuristic**: very young domains are disproportionately
-  used in phishing campaigns; surfacing registration age adds a heuristic
-  signal independent of the reputation feeds.
-- **Personal threat log**: keep a local, exportable (CSV/JSON) history of
-  every site that was ever flagged — a "personal SOC ticket queue" for your
-  own browsing.
-- **Generate an incident-style report**: a button that turns a flagged
-  site's data into a short markdown write-up (indicators, sources, verdict) —
-  mirrors real SOC reporting and demonstrates that skill directly.
-- **Map findings to MITRE ATT&CK** (e.g., T1566 Phishing, T1583.001 Domains)
-  in the popup for anyone using this alongside detection-engineering work.
-- **Unit tests** for the aggregation logic (`aggregate()` in `background.js`)
-  — it's pure and easy to test in isolation.
-
 ## License
 
 MIT — see [LICENSE](./LICENSE).
