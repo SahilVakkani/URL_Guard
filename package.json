@@ -1,0 +1,11 @@
+{
+  "name": "url-reputation-guard",
+  "version": "1.1.0",
+  "description": "Chrome extension that checks every visited URL against VirusTotal, Google Safe Browsing, URLhaus, and AlienVault OTX, and warns before landing on a malicious or phishing page.",
+  "license": "MIT",
+  "scripts": {
+    "validate": "node -e \"JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest.json is valid JSON')\"",
+    "lint:syntax": "node --check background.js && node --check content.js && node --check popup.js && node --check options.js && echo 'All scripts parse OK'",
+    "package": "zip -r url-reputation-guard.zip . -x '*.git*' -x 'node_modules/*' -x '*.zip'"
+  }
+}
